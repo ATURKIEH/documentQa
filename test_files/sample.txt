@@ -1,0 +1,7 @@
+Document Q&A Test File
+
+This is a plain text file used to test the extract_from_txt function.
+
+Retrieval-Augmented Generation combines a retriever with a language model
+so that answers are grounded in real, retrievable source documents rather
+than relying purely on the model's internal training data.
