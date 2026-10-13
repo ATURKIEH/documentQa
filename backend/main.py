@@ -23,7 +23,10 @@ load_dotenv()
 app = FastAPI()
 document_utils = DocumentUtils()
 embed_utils = EmbedUtils()
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
+r = redis.Redis.from_url(REDIS_URL, decode_responses=True)
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+
 
 
 
@@ -59,7 +62,7 @@ def ollama_unavailable() -> HTTPException:
     )
 
 def classify_intent(question: str) -> str:
-    llm = ChatOllama(model="llama3.2:3b", temperature=0, num_predict=4)
+    llm = ChatOllama(model="llama3.2:3b", temperature=0, num_predict=4, base_url=OLLAMA_BASE_URL)
     prompt = ChatPromptTemplate.from_messages([
         ("system",
          "You route messages in a document Q&A app. Reply with exactly one word.\n"
@@ -83,7 +86,7 @@ def generate_chat_reply(question: str, history: list) -> dict:
         MessagesPlaceholder("history"),
         ("human", "{question}"),
     ])
-    llm = ChatOllama(model="llama3.2:3b", temperature=0.7)
+    llm = ChatOllama(model="llama3.2:3b", temperature=0.7, base_url=OLLAMA_BASE_URL)
     history_msgs = [(m.role, m.content) for m in history]
     try:
         response = (prompt | llm).invoke({"history": history_msgs, "question": question})
@@ -301,7 +304,7 @@ def generate_answer(question: str, user_id: int, document_ids: list[int], db: Se
          "I don't have information on that in this document."),
         ("human", "Context:\n{context}\n\nQuestion: {question}"),
     ])
-    llm = ChatOllama(model="llama3.2:3b", temperature=0)
+    llm = ChatOllama(model="llama3.2:3b", temperature=0, base_url=OLLAMA_BASE_URL)
     try:
         response = (prompt_template | llm).invoke({"context": context, "question": question})
     except (httpx.ConnectError, ConnectionError):
