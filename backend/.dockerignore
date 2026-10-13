@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+uploaded_files/
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+.git/
+quick_check.py
+test_connection.py
