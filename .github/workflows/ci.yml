@@ -17,7 +17,7 @@ jobs:
       run:
         working-directory: backend
     env:
-      SECRET_KEY: ci-test-secret
+      SECRET_KEY: kKtPvXY1828oWX73J5qQcbvnLcXWmp1GuF99ts9FWsiQO939hL72DjA60rURfPj0Uzjq6L92oTMUr6TKXaTGe3Vv6zbFlICQmingNqvTSUjpJc63X1cmVaDHOUuPdHqH
       DATABASE_URL: sqlite://
       REDIS_URL: redis://localhost:6379
     steps:
